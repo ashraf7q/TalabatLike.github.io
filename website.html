@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Talabat | Egyptian Food · Authentic Flavors</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f7f5f0;
+            font-family: 'Inter', sans-serif;
+            color: #1e2a2e;
+            padding: 2rem 1.5rem;
+        }
+
+        .app-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 2rem;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .brand-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #efe6dc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #c94f2c, #e07a3a);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .logo i {
+            color: #c94f2c;
+            margin-right: 6px;
+        }
+
+        .user-area {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .user-name {
+            font-weight: 600;
+            color: #c94f2c;
+        }
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.3rem;
+            color: #c94f2c;
+        }
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -12px;
+            background: #c94f2c;
+            color: white;
+            font-size: 0.65rem;
+            padding: 2px 6px;
+            border-radius: 50%;
+        }
+        .btn-icon {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #b97f51;
+            padding: 0.3rem 0.8rem;
+            border-radius: 30px;
+            transition: 0.2s;
+        }
+        .btn-icon:hover {
+            background: #f3efe9;
+        }
+
+        /* Auth Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+            position: relative;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #8b7a6b;
+        }
+        .auth-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #efe2d6;
+        }
+        .auth-tab {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-weight: 600;
+            color: #8b7a6b;
+        }
+        .auth-tab.active {
+            color: #c94f2c;
+            border-bottom: 2px solid #c94f2c;
+            margin-bottom: -2px;
+        }
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .auth-form input {
+            padding: 0.8rem;
+            border: 1px solid #e0d4c8;
+            border-radius: 0.8rem;
+            font-family: inherit;
+        }
+        .auth-form button {
+            background: #c94f2c;
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .auth-form button:hover {
+            background: #e07a3a;
+        }
+        .error-msg {
+            color: #e74c3c;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+        .success-msg {
+            color: #27ae60;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+
+        /* Rest of styles */
+        .filters-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #f0e9e2;
+        }
+        .sort-section, .filters-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        .sort-chip, .filter-btn {
+            background: #f3efe9;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            border: none;
+        }
+        .sort-chip.active, .filter-btn.active {
+            background: #c94f2c;
+            color: white;
+        }
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .search-wrapper {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            border: 1px solid #e0d4c8;
+            border-radius: 60px;
+            padding: 0.3rem 0.8rem;
+        }
+        #searchInput {
+            border: none;
+            outline: none;
+            padding: 0.4rem;
+            width: 160px;
+        }
+        .reset-btn {
+            background: none;
+            border: 1px solid #e0d4c8;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            cursor: pointer;
+        }
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            padding: 1.5rem 2rem;
+        }
+        .food-card {
+            background: white;
+            border-radius: 1.2rem;
+            overflow: hidden;
+            border: 1px solid #f1e8e0;
+            transition: 0.2s;
+        }
+        .food-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+        .card-img {
+            height: 160px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        .badge-cat {
+            background: rgba(0,0,0,0.65);
+            backdrop-filter: blur(4px);
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+        }
+        .card-content {
+            padding: 1rem;
+        }
+        .dish-name {
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        .price {
+            color: #c94f2c;
+            font-weight: 800;
+        }
+        .order-icon {
+            color: #c94f2c;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            display: inline-block;
+            font-size: 0.9rem;
+        }
+        .order-icon.disabled {
+            color: #ccc;
+            cursor: not-allowed;
+        }
+        .bottom-nav {
+            border-top: 1px solid #efe2d6;
+            padding: 1rem 2rem;
+            display: flex;
+            gap: 2rem;
+            background: #fefaf5;
+        }
+        .bottom-nav span {
+            color: #b97f51;
+            cursor: pointer;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem;
+            border-bottom: 1px solid #efe2d6;
+        }
+        .cart-summary {
+            background: #f9f4ed;
+            padding: 1rem;
+            border-radius: 1rem;
+            margin-top: 1rem;
+        }
+        .checkout-btn {
+            background: #c94f2c;
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            width: 100%;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+        .back-btn {
+            background: none;
+            border: 1px solid #c94f2c;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-bottom: 1rem;
+        }
+        @media (max-width: 700px) {
+            body { padding: 1rem; }
+            .filters-bar { flex-direction: column; align-items: stretch; }
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <div class="brand-header">
+        <div class="logo">
+            <i class="fas fa-utensils"></i> talabat | Egypt
+        </div>
+        <div class="user-area">
+            <span id="userDisplay" class="user-name"></span>
+            <div class="cart-icon" id="cartIcon">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count" id="cartCount">0</span>
+            </div>
+            <button class="btn-icon" id="authBtn"><i class="fas fa-user-circle"></i> Sign In</button>
+            <button class="btn-icon" id="logoutBtn" style="display: none;"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+    </div>
+
+    <!-- Menu Page -->
+    <div id="menuPage" class="page active">
+        <div class="filters-bar">
+            <div class="sort-section">
+                <span class="sort-chip" data-sort="alpha">Alphabetical</span>
+                <span class="sort-chip" data-sort="price-asc">Price: Low</span>
+                <span class="sort-chip" data-sort="price-desc">Price: High</span>
+            </div>
+            <div class="filters-group" id="brandFilterGroup">
+                <button class="filter-btn active" data-brand="all">All</button>
+                <button class="filter-btn" data-brand="Cairo Eats">Cairo Eats</button>
+                <button class="filter-btn" data-brand="Alexandria Fish">Alexandria Fish</button>
+                <button class="filter-btn" data-brand="Nile Kitchen">Nile Kitchen</button>
+            </div>
+            <div class="filters-group" id="typeFilterGroup">
+                <button class="filter-btn active" data-type="all">All</button>
+                <button class="filter-btn" data-type="Rice & Grains">Rice</button>
+                <button class="filter-btn" data-type="Seafood">Seafood</button>
+                <button class="filter-btn" data-type="Poultry">Poultry</button>
+                <button class="filter-btn" data-type="Stews">Stews</button>
+                <button class="filter-btn" data-type="Desserts">Desserts</button>
+                <button class="filter-btn" data-type="Vegetarian">Veggie</button>
+            </div>
+        </div>
+        <div class="results-header">
+            <div class="results-count" id="resultsCount">Showing results</div>
+            <div class="search-reset-area">
+                <div class="search-wrapper">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search dish...">
+                </div>
+                <button class="reset-btn" id="resetBtn">Reset</button>
+            </div>
+        </div>
+        <div class="menu-grid" id="menuGrid"></div>
+    </div>
+
+    <!-- Cart Page -->
+    <div id="cartPage" class="page">
+        <button class="back-btn" id="backToMenu"><i class="fas fa-arrow-left"></i> Back to Menu</button>
+        <h2>Your Order</h2>
+        <div id="cartItemsContainer"></div>
+        <div id="cartSummary"></div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-utensils"></i> Welcome to talabat</h3>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-auth="login">Sign In</button>
+                <button class="auth-tab" data-auth="signup">Create Account</button>
+            </div>
+            <div id="loginForm" class="auth-form">
+                <input type="email" id="loginEmail" placeholder="Email" required>
+                <input type="password" id="loginPassword" placeholder="Password" required>
+                <button id="doLogin">Sign In</button>
+                <div id="loginError" class="error-msg"></div>
+            </div>
+            <div id="signupForm" class="auth-form" style="display: none;">
+                <input type="text" id="signupName" placeholder="Full Name" required>
+                <input type="email" id="signupEmail" placeholder="Email" required>
+                <input type="password" id="signupPassword" placeholder="Password (min 4 chars)" required>
+                <button id="doSignup">Create Account</button>
+                <div id="signupError" class="error-msg"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <span id="homeBtn"><i class="fas fa-home"></i> HOME</span>
+        <span id="shopBtn"><i class="fas fa-shopping-bag"></i> SHOP</span>
+    </div>
+</div>
+
+<script>
+    // ---------- MENU DATA ----------
+    const menuItems = [
+        { id: 1, name: "Koshari", price: 85, brand: "Cairo Eats", type: "Rice & Grains", desc: "Lentils, rice, macaroni, crispy onions.", imageFile: "Koshari.jpg", vegetarian: true },
+        { id: 2, name: "Molokhia", price: 220, brand: "Nile Kitchen", type: "Stews", desc: "Jute leaves stew with garlic.", imageFile: "Molokhia.jpg" },
+        { id: 3, name: "Feseekh", price: 180, brand: "Alexandria Fish", type: "Seafood", desc: "Salted fermented fish.", imageFile: "Feseekh.jpg" },
+        { id: 4, name: "Hamam Mahshi", price: 320, brand: "Cairo Eats", type: "Poultry", desc: "Stuffed pigeon.", imageFile: "Hamam Mahshi.jpg" },
+        { id: 5, name: "Roz Bel Laban", price: 45, brand: "Nile Kitchen", type: "Desserts", desc: "Rice pudding.", imageFile: "Roz Bel Laban.jpg", vegetarian: true },
+        { id: 6, name: "Bamya", price: 110, brand: "Cairo Eats", type: "Stews", desc: "Okra stew.", imageFile: "Bamya.jpg" },
+        { id: 7, name: "Sayadeya", price: 195, brand: "Alexandria Fish", type: "Seafood", desc: "Fish with rice.", imageFile: "Sayadeya.jpg" },
+        { id: 8, name: "Shawarma", price: 140, brand: "Cairo Eats", type: "Poultry", desc: "Chicken shawarma.", imageFile: "Shawarma El Ahram.jpg" },
+        { id: 9, name: "Fatta", price: 260, brand: "Nile Kitchen", type: "Rice & Grains", desc: "Lamb & rice layers.", imageFile: "Fatta.jpg" },
+        { id: 10, name: "Mahshi", price: 150, brand: "Cairo Eats", type: "Vegetarian", desc: "Stuffed vegetables.", imageFile: "Mahshi.jpg", vegetarian: true },
+        { id: 11, name: "Mombar", price: 130, brand: "Nile Kitchen", type: "Stews", desc: "Stuffed intestines.", imageFile: "Mombar.jpg" },
+        { id: 12, name: "Hawawshi", price: 95, brand: "Cairo Eats", type: "Poultry", desc: "Meat stuffed bread.", imageFile: "Hawawshi.jpg" },
+        { id: 13, name: "Kunafa", price: 70, brand: "Nile Kitchen", type: "Desserts", desc: "Sweet cheese pastry.", imageFile: "Kunafa with Cream.jpg", vegetarian: true },
+        { id: 14, name: "Shorbat Adas", price: 55, brand: "Cairo Eats", type: "Soups", desc: "Lentil soup.", imageFile: "Shorbat Adas.jpg", vegetarian: true },
+        { id: 15, name: "Sahlab", price: 40, brand: "Alexandria Fish", type: "Desserts", desc: "Warm milk pudding.", imageFile: "Sahlab.jpg", vegetarian: true },
+        { id: 16, name: "Tagen Samak", price: 245, brand: "Alexandria Fish", type: "Seafood", desc: "Fish tagine.", imageFile: "Tagen Samak.jpg" },
+        { id: 17, name: "Gollash", price: 80, brand: "Cairo Eats", type: "Desserts", desc: "Sweet filo pastry.", imageFile: "Gollash.jpg", vegetarian: true },
+        { id: 18, name: "Eggplant Fatteh", price: 125, brand: "Nile Kitchen", type: "Vegetarian", desc: "Eggplant & yogurt.", imageFile: "Roasted Eggplant Fatteh.jpg", vegetarian: true }
+    ];
+
+    // ---------- AUTH SYSTEM ----------
+    let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+    let users = JSON.parse(localStorage.getItem('users')) || [];
+
+    function saveUsers() { localStorage.setItem('users', JSON.stringify(users)); }
+    function saveCurrentUser() { localStorage.setItem('currentUser', JSON.stringify(currentUser)); }
+
+    function updateAuthUI() {
+        if (currentUser) {
+            document.getElementById('userDisplay').innerHTML = `<i class="fas fa-user"></i> ${currentUser.name}`;
+            document.getElementById('authBtn').style.display = 'none';
+            document.getElementById('logoutBtn').style.display = 'inline-block';
+        } else {
+            document.getElementById('userDisplay').innerHTML = '';
+            document.getElementById('authBtn').style.display = 'inline-block';
+            document.getElementById('logoutBtn').style.display = 'none';
+        }
+    }
+
+    function showAuthModal() { document.getElementById('authModal').classList.add('active'); }
+    function hideAuthModal() { document.getElementById('authModal').classList.remove('active'); }
+
+    function login(email, password) {
+        const user = users.find(u => u.email === email && u.password === password);
+        if (user) {
+            currentUser = user;
+            saveCurrentUser();
+            updateAuthUI();
+            hideAuthModal();
+            clearCart(); // Fresh cart for new user
+            renderMenu();
+            return true;
+        }
+        document.getElementById('loginError').innerText = 'Invalid email or password';
+        return false;
+    }
+
+    function signup(name, email, password) {
+        if (users.find(u => u.email === email)) {
+            document.getElementById('signupError').innerText = 'Email already exists';
+            return false;
+        }
+        if (password.length < 4) {
+            document.getElementById('signupError').innerText = 'Password must be at least 4 characters';
+            return false;
+        }
+        const newUser = { id: Date.now(), name, email, password };
+        users.push(newUser);
+        saveUsers();
+        currentUser = newUser;
+        saveCurrentUser();
+        updateAuthUI();
+        hideAuthModal();
+        clearCart();
+        renderMenu();
+        return true;
+    }
+
+    function logout() {
+        currentUser = null;
+        saveCurrentUser();
+        updateAuthUI();
+        clearCart();
+        renderMenu();
+        showMenuPage();
+    }
+
+    // ---------- CART SYSTEM (per user) ----------
+    function getCartKey() { return `cart_${currentUser ? currentUser.id : 'guest'}`; }
+    function loadCart() { 
+        if (!currentUser) return [];
+        return JSON.parse(localStorage.getItem(getCartKey())) || []; 
+    }
+    function saveCart(cart) { 
+        if (currentUser) localStorage.setItem(getCartKey(), JSON.stringify(cart)); 
+    }
+    let cart = loadCart();
+
+    function updateCartCount() {
+        let total = cart.reduce((s,i)=> s + i.quantity, 0);
+        document.getElementById('cartCount').innerText = total;
+    }
+
+    function addToCart(item) {
+        if (!currentUser) {
+            showAuthModal();
+            return;
+        }
+        let existing = cart.find(i => i.id === item.id);
+        if (existing) existing.quantity++;
+        else cart.push({...item, quantity: 1});
+        saveCart(cart);
+        updateCartCount();
+        alert(`${item.name} added to cart!`);
+    }
+
+    function clearCart() {
+        cart = [];
+        if (currentUser) saveCart(cart);
+        updateCartCount();
+    }
+
+    function placeOrder() {
+        if (!currentUser) { showAuthModal(); return; }
+        if (cart.length === 0) { alert("Cart is empty"); return; }
+        let total = cart.reduce((s,i)=> s + (i.price * i.quantity), 0) + 30;
+        alert(`Order placed successfully!\nTotal: ${total} EGP\nThank you ${currentUser.name}! Your Egyptian feast is on its way! 🎉`);
+        cart = [];
+        saveCart(cart);
+        updateCartCount();
+        renderCartPage();
+        showMenuPage();
+    }
+
+    // ---------- RENDER FUNCTIONS ----------
+    function getImagePath(item) { return `images/${item.imageFile}`; }
+
+    let currentSort = "alpha", currentBrand = "all", currentType = "all", searchQuery = "";
+    
+    function getFiltered() {
+        return menuItems.filter(item => {
+            if (currentBrand !== "all" && item.brand !== currentBrand) return false;
+            if (currentType !== "all" && item.type !== currentType) return false;
+            if (searchQuery && !item.name.toLowerCase().includes(searchQuery) && !item.desc.toLowerCase().includes(searchQuery)) return false;
+            return true;
+        }).sort((a,b) => {
+            if (currentSort === "alpha") return a.name.localeCompare(b.name);
+            if (currentSort === "price-asc") return a.price - b.price;
+            return b.price - a.price;
+        });
+    }
+
+    function renderMenu() {
+        let items = getFiltered();
+        document.getElementById('resultsCount').innerText = `Showing ${items.length} of ${menuItems.length} results`;
+        let html = items.map(item => `
+            <div class="food-card">
+                <div class="card-img" style="background-image: url('${getImagePath(item)}');">
+                    <span class="badge-cat">${item.type}</span>
+                </div>
+                <div class="card-content">
+                    <div class="dish-name">
+                        <span>${item.name} ${item.vegetarian ? '<i class="fas fa-leaf" style="font-size:0.7rem;"></i>' : ''}</span>
+                        <span class="price">${item.price} EGP</span>
+                    </div>
+                    <div class="order-icon" data-id="${item.id}">
+                        <i class="fas fa-plus-circle"></i> Add to order
+                    </div>
+                </div>
+            </div>
+        `).join('');
+        document.getElementById('menuGrid').innerHTML = html;
+        document.querySelectorAll('.order-icon').forEach(el => {
+            let id = parseInt(el.dataset.id);
+            el.addEventListener('click', () => addToCart(menuItems.find(i=>i.id===id)));
+        });
+    }
+
+    function renderCartPage() {
+        let container = document.getElementById('cartItemsContainer');
+        if (cart.length === 0) {
+            container.innerHTML = "<div class='empty-cart' style='text-align:center;padding:2rem;'>Your cart is empty. Sign in and add some delicious Egyptian dishes!</div>";
+            document.getElementById('cartSummary').innerHTML = "";
+            return;
+        }
+        container.innerHTML = cart.map(item => `
+            <div class="cart-item">
+                <span>${item.name} x${item.quantity}</span>
+                <span>${item.price * item.quantity} EGP</span>
+            </div>
+        `).join('');
+        let subtotal = cart.reduce((s,i)=> s + i.price * i.quantity, 0);
+        let total = subtotal + 30;
+        document.getElementById('cartSummary').innerHTML = `
+            <div class="cart-summary">
+                <div>Subtotal: ${subtotal} EGP</div>
+                <div>Delivery: 30 EGP</div>
+                <div><strong>Total: ${total} EGP</strong></div>
+                <button class="checkout-btn" id="placeOrderBtn">Place Order</button>
+            </div>
+        `;
+        document.getElementById('placeOrderBtn')?.addEventListener('click', placeOrder);
+    }
+
+    // ---------- PAGE NAVIGATION ----------
+    function showMenuPage() {
+        document.getElementById('menuPage').classList.add('active');
+        document.getElementById('cartPage').classList.remove('active');
+        renderMenu();
+    }
+    function showCartPage() {
+        if (!currentUser) { showAuthModal(); return; }
+        document.getElementById('menuPage').classList.remove('active');
+        document.getElementById('cartPage').classList.add('active');
+        renderCartPage();
+    }
+
+    // ---------- INIT & EVENT LISTENERS ----------
+    function init() {
+        updateAuthUI();
+        updateCartCount();
+        renderMenu();
+
+        document.getElementById('homeBtn').addEventListener('click', showMenuPage);
+        document.getElementById('shopBtn').addEventListener('click', showCartPage);
+        document.getElementById('cartIcon').addEventListener('click', showCartPage);
+        document.getElementById('backToMenu').addEventListener('click', showMenuPage);
+        document.getElementById('authBtn').addEventListener('click', showAuthModal);
+        document.getElementById('logoutBtn').addEventListener('click', logout);
+        document.getElementById('closeModal').addEventListener('click', hideAuthModal);
+        
+        // Auth tabs
+        document.querySelectorAll('.auth-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                let type = tab.dataset.auth;
+                document.getElementById('loginForm').style.display = type === 'login' ? 'flex' : 'none';
+                document.getElementById('signupForm').style.display = type === 'signup' ? 'flex' : 'none';
+            });
+        });
+        
+        document.getElementById('doLogin').addEventListener('click', () => {
+            let email = document.getElementById('loginEmail').value;
+            let password = document.getElementById('loginPassword').value;
+            login(email, password);
+        });
+        document.getElementById('doSignup').addEventListener('click', () => {
+            let name = document.getElementById('signupName').value;
+            let email = document.getElementById('signupEmail').value;
+            let password = document.getElementById('signupPassword').value;
+            signup(name, email, password);
+        });
+        
+        // Filters
+        document.querySelectorAll('.sort-chip').forEach(c => c.addEventListener('click', () => {
+            currentSort = c.dataset.sort;
+            document.querySelectorAll('.sort-chip').forEach(s => s.classList.remove('active'));
+            c.classList.add('active');
+            renderMenu();
+        }));
+        document.querySelectorAll('#brandFilterGroup .filter-btn').forEach(b => b.addEventListener('click', () => {
+            currentBrand = b.dataset.brand;
+            document.querySelectorAll('#brandFilterGroup .filter-btn').forEach(f => f.classList.remove('active'));
+            b.classList.add('active');
+            renderMenu();
+        }));
+        document.querySelectorAll('#typeFilterGroup .filter-btn').forEach(t => t.addEventListener('click', () => {
+            currentType = t.dataset.type;
+            document.querySelectorAll('#typeFilterGroup .filter-btn').forEach(f => f.classList.remove('active'));
+            t.classList.add('active');
+            renderMenu();
+        }));
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            searchQuery = e.target.value.toLowerCase();
+            renderMenu();
+        });
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            currentBrand = "all";
+            currentType = "all";
+            searchQuery = "";
+            document.getElementById('searchInput').value = "";
+            document.querySelectorAll('#brandFilterGroup .filter-btn').forEach(f => f.classList.remove('active'));
+            document.querySelector('#brandFilterGroup .filter-btn[data-brand="all"]').classList.add('active');
+            document.querySelectorAll('#typeFilterGroup .filter-btn').forEach(f => f.classList.remove('active'));
+            document.querySelector('#typeFilterGroup .filter-btn[data-type="all"]').classList.add('active');
+            renderMenu();
+        });
+        
+        // Close modal on outside click
+        window.onclick = (e) => { if (e.target === document.getElementById('authModal')) hideAuthModal(); };
+    }
+    
+    init();
+</script>
+</body>
+</html>
