@@ -1,4 +1,4 @@
-                                                                Talabat Egypt Clone Web Application
+                                                   Talabat Egypt Clone Web Application
 Developed a responsive food ordering web application inspired by Talabat using HTML, CSS, and JavaScript. Implemented dynamic menu rendering, filtering, search functionality, cart management, authentication system, localStorage persistence, and responsive UI design. Built interactive features including sorting, category filtering, user login/signup, order management, and real-time cart updates while focusing on clean UI/UX and modular JavaScript structure.
 
 <img width="1920" height="1031" alt="Screenshot (146)" src="https://github.com/user-attachments/assets/d9c427ce-ddf3-44e8-abb0-b653a9ab0d5f" />
